@@ -44,7 +44,7 @@
 ## ПРОЕКТ
 
 Проект Django находится в папке project
-В файле settings.py или local_settings.py для настройки базы данных используйте переменные из os.environ (см. дефолтный проект)
+В файле settings.py или local_settings.py для настройки базы данных используйте переменные из os.environ (см. дефолтный проект).
 Так же есть возможность запускать проект вне Docker на другой базе даных. Пример также в settings.py. Для определения контекста можно использовать переменную IS_DOCKER_CONTAINER
 
 ### TODO:
@@ -56,29 +56,30 @@
 
 # Запуск
 
-### docker install
+```bash 
+# docker install
 sudo curl -sSL https://get.docker.com/ | sh
-
-### sudo systemctl status docker
+# check status
+sudo systemctl status docker
+# add user to docker group
 sudo usermod -aG docker $(whoami)
-
-### docker compose
+# install docker compose
 sudo apt-get -y install python-pip git
 sudo pip install docker-compose
 
-### скачать проект
+# Download project
 cd ~
-git clone ...
+git clone https://github.com/paulwinex/django_docker_template.git
 cd ~/django_docker_example
-
-### Создание образов
+# create images
 ./_build_all.sh
 
-### Запуск
+# start
 docker-compose up -d
 
-### Или
+# or
 ./start_all.sh
+```
 
 
 # ПОЛЕЗНЫЕ КОМАНДЫ
@@ -86,36 +87,61 @@ docker-compose up -d
 
 ### Полное пересоздание образов
 #### (Нужно находиться в папке с файлом docker-compose.yml)
+
+```
 docker-compose build --no-cache
+```
 
 ### Остановка стека
-#### (Нужно находиться в папке с файлом docker-compose.yml)
+###### (Нужно находиться в папке с файлом docker-compose.yml)
+```
 docker-compose down
+```
 
 ### Удаление всех остановленных контейнеров
+```
 docker rm $(docker ps -a -q -f status=exited)
+```
 
 ### Удаление всех контейнеров
+```
 docker rm -f $(docker ps -a -q)
+```
 
 ### Рестарт всех контейнеров
+```
 docker stop $(docker ps -aq);docker start $(docker ps -aq)
+```
 #### или
+```
 docker-compose restart
+```
 
 ### Удаление всех контейнеров
+```
 docker stop $(docker ps -aq);docker rm $(docker ps -aq)
+```
 ### или
+```
 docker-compose rm --all -f
+```
 
 ### Удаление всех неактивных контейнеров:
+```
 docker stop $(docker ps -a | grep 'Exited' | awk '{print $1}') && docker rm $(docker ps -a | grep 'Exited' | awk '{print $1}')
+```
 
 ### Удаление всех томов (занятые не удляются) 
+```
 docker volume rm $(docker volume ls -q);
+```
 
 ### Удаление всех образов (занятые не удляются) 
+```
 docker rmi $(docker images -q);
+```
 
 ### Как задать количество воркеров?
+```
 docker-compose scale worker=3
+```
