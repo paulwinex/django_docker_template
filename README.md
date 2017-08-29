@@ -52,6 +52,7 @@
 - добавить задания для cron, бекап базы данных и тп
 - добавить сервис daphne (для channels)
 - переопределить пути логов для nginx
+- добавить HAProxy
 
 # Запуск
 
@@ -115,3 +116,6 @@ docker volume rm $(docker volume ls -q);
 
 ### Удаление всех образов (занятые не удляются) 
 docker rmi $(docker images -q);
+
+### Как задать количество воркеров?
+docker-compose scale worker=3
