@@ -55,12 +55,9 @@ services:
       - db
       - redis
 
-
   workers:
     restart: always
     image: paulwinex/worker
-    # container_name: worker
-    # scale: 3
     links:
       - redis:redis
     env_file: .env
@@ -70,38 +67,14 @@ services:
     depends_on:
       - redis
 
-  # workers:
-  #   restart: always
-  #   build: 
-  #     context: .
-  #     dockerfile: Dockerfile_workers
-  #   links:
-  #     - redis:redis
-  #   env_file: .env
-  #   volumes:
-  #     - ./project:/data/web/project
-  #     - ${LOG_DIR}:/data/logs
-  #   # command: bash
-  #   # command: /data/web/project/start_workers.sh
-  #   depends_on:
-  #     - redis
-
-  # web:
-  #   restart: always
-  #   build: 
-  #     context: .
-  #     dockerfile: Dockerfile_web
-  #   expose:
-  #     - "${APP_PORT}"
-  #   links:
-  #     - postgres:postgres
-  #     - redis:redis
-  #   env_file: .env
-  #   volumes:
-  #     - ./project:/data/web/project
-  #     - ${LOG_DIR}:/data/logs
-  #     - ${MEDIA_DIR}:/data/web/media
-  #   command: /data/web/project/start_server.sh
-  #   depends_on:
-  #     - postgres
-  #     - redis
+  scheduler:
+    restart: always
+    image: paulwinex/scheduler
+    links:
+      - redis:redis
+    env_file: .env
+    volumes:
+      - ./project:/data/web/project
+      - ${LOG_DIR}:/data/logs
+    depends_on:
+      - redis
