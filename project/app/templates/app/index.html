@@ -1,0 +1,138 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Django Docker Test Page</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static "app/style.css" %}" rel="stylesheet">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="jumbotron">
+        <h1 class="text-center">Django Docker <small class="text-muted">test page</small></h1>
+        <hr>
+
+        <p class="lead">Static CSS:</p>
+        <p class="customclass"><span style="color:red" >Cant load static CSS</span></p>
+        <hr>
+
+        <p class="lead">Static image:</p>
+        <img src="{% static "app/image.png" %}" class="img-responsive" style="color:red" alt="Cant read image from static {% static "app/image.png" %}">
+        <hr>
+
+        <p class="lead">Upload to media ({{ media }}):</p>
+        <form enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <input type="file" name="file">
+            <input type="submit" value="Upload">
+        </form>
+        {% if files %}
+            <br>
+            <p class="text-muted">Uploaded files:</p>
+            <ul>
+                {% for file in files %}
+                    <li>{{ file }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <hr>
+
+        <p class="lead">DataBase:</p>
+        {% if values %}
+            <ul>
+                {% for value in values %}
+                    <li>{{ value.pk }} - {{ value.value }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No Values</p>
+        {% endif %}
+        <hr>
+
+        <p class="lead">Redis:</p>
+        <p><button onclick="RedisWorkerTest()">Start Test Worker (3 sec)</button>  <span style="font-weight: 800" id="workerresult"></span></p>
+        <p><button onclick="CreateSchedulerTest()">Start Test Scheduler (30 sec)</button>  <span style="font-weight: 800" id="schedulerresult"></span></p>
+        <ul id="scheduler-list"></ul>
+        <hr>
+    {% if errors %}
+        {% for error in errors %}
+            <p style="color: red;font-weight: 700">{{ error }}</p>
+        {% endfor %}
+    {% endif %}
+
+
+    </div>
+
+
+    <footer class="footer">
+        <p>&copy; paulwinex</p>
+    </footer>
+
+</div> <!-- /container -->
+
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+<script>
+    function RedisWorkerTest() {
+        $("#workerresult").html('Start job...');
+        $.get(
+            "{% url "redistest" %}",
+            {},
+            function (data) {
+                $("#workerresult").html(data.result);
+            }
+        )
+    }
+    function CreateSchedulerTest() {
+{#        $("#schedulerresult").html('Start job...');#}
+        $.get(
+            "{% url "schedulertest" %}",
+            {},
+            function (data) {
+{#                $("#schedulerresult").html(data.result);#}
+                CheckSchedulerResult()
+            }
+        )
+    }
+    var t = null;
+    function CheckSchedulerResult() {
+
+        $.get(
+            "{% url "schedulertest" %}",
+            {
+                result:1
+            },
+            function(data){
+{#                console.log(data.result);#}
+                var list = '';
+                if (data.result.length > 0){
+                    for (var i = 0; i < data.result.length; i++) {
+                        list += '<li>' + data.result[i][0] + ' : ' + data.result[i][1] + '</li>'
+                    }
+                }
+{#                console.log(list);#}
+                $("#scheduler-list").html(list);
+                if (data.result.length > 0){
+                    if (t===null) {
+                        t = setTimeout(function () {
+                            CheckSchedulerResult();
+                            t = null;
+                        }, 3000)
+                    }
+                }
+            }
+        )
+    }
+
+</script>
+</body>
+</html>

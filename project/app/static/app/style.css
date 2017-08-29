@@ -1,0 +1,16 @@
+
+.customclass {
+	margin: 20px auto;
+	text-align: left;
+	/*text-shadow: -2px -2px 0 rgba(69, 252, 255, 0.1), 1px 1px 0 rgba(0, 0, 0, 2.9);*/
+    text-shadow: 2px 2px 2px #000;
+	color: #333;
+	opacity: 0.4;
+	font: 700 50px 'Bitter';
+}
+.customclass span {
+  display: none;
+}
+.customclass:after {
+  content: 'Static CSS OK';
+}

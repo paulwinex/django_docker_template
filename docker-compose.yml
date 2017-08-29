@@ -1,0 +1,107 @@
+version: '3.1'
+services:
+  nginx:
+    restart: always
+    # build: ./nginx/
+    image: paulwinex/nginx_lua
+    container_name: proxy
+    # image_name: paulwinex/nginx
+    env_file:
+      - .env
+    ports:
+      - "80:80"
+    volumes:
+      - ${MEDIA_DIR}:/data/web/media
+      - ./project/static:/data/web/project/static
+      - ${LOG_DIR}:/data/logs
+    links:
+      - project
+
+  db:
+    restart: always
+    container_name: db
+    image: postgres:latest
+    volumes:
+      - ${POSTGRES_DATA}:${PGDATA}
+      - ${POSTRGES_BACKUPS}:/backup
+    env_file:
+      - .env
+    expose:
+      - "${POSTGRES_PORT}"
+
+  redis:
+    restart: always
+    image: redis:latest
+    container_name: redis
+    expose:
+      - "6379"
+
+  project:
+    restart: always
+    image: paulwinex/project
+    container_name: project
+    expose:
+      - "${APP_PORT}"
+    links:
+      - db:db
+      - redis:redis
+    env_file: .env
+    volumes:
+      - ./project:/data/web/project
+      - ${LOG_DIR}:/data/logs
+      - ${MEDIA_DIR}:/data/web/media
+    command: /data/web/project/start_server.sh
+    depends_on:
+      - db
+      - redis
+
+
+  workers:
+    restart: always
+    image: paulwinex/worker
+    # container_name: worker
+    # scale: 3
+    links:
+      - redis:redis
+    env_file: .env
+    volumes:
+      - ./project:/data/web/project
+      - ${LOG_DIR}:/data/logs
+    depends_on:
+      - redis
+
+  # workers:
+  #   restart: always
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile_workers
+  #   links:
+  #     - redis:redis
+  #   env_file: .env
+  #   volumes:
+  #     - ./project:/data/web/project
+  #     - ${LOG_DIR}:/data/logs
+  #   # command: bash
+  #   # command: /data/web/project/start_workers.sh
+  #   depends_on:
+  #     - redis
+
+  # web:
+  #   restart: always
+  #   build: 
+  #     context: .
+  #     dockerfile: Dockerfile_web
+  #   expose:
+  #     - "${APP_PORT}"
+  #   links:
+  #     - postgres:postgres
+  #     - redis:redis
+  #   env_file: .env
+  #   volumes:
+  #     - ./project:/data/web/project
+  #     - ${LOG_DIR}:/data/logs
+  #     - ${MEDIA_DIR}:/data/web/media
+  #   command: /data/web/project/start_server.sh
+  #   depends_on:
+  #     - postgres
+  #     - redis

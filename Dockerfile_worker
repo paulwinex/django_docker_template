@@ -1,0 +1,8 @@
+FROM paulwinex/project
+MAINTAINER paulwinex
+
+VOLUME ./project:/data/web/project
+VOLUME .data/logs:/data/logs
+
+WORKDIR /data/web/project
+CMD /data/web/project/start_worker.sh

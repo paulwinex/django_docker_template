@@ -1,0 +1,12 @@
+FROM python:3.5
+
+MAINTAINER paulwinex
+
+COPY ./project/requirements.txt /data/requirements.txt
+# install mc?
+# RUN apt-get update && apt-get install -yqq mc
+RUN	pip install -r /data/requirements.txt && rm /data/requirements.txt
+RUN mkdir /data/run
+COPY ./project/_config/gunicorn.conf.py /data/run/gunicorn.conf.py
+WORKDIR /data/web/project
+CMD /data/web/project/start_server.sh

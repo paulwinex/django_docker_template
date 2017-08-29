@@ -1,0 +1,7 @@
+Django
+redis
+django-redis
+gunicorn
+psycopg2
+django-rq
+rq-scheduler

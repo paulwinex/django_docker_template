@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.log
+local_settings.py
+.idea
+/static/*
+db.sqlite3
+migrations
+/data/*
+_tmp

@@ -1,0 +1,9 @@
+FROM paulwinex/project
+MAINTAINER paulwinex
+
+VOLUME ./project:/data/web/project
+VOLUME .data/logs:/data/logs
+# COPY /configs/rqworkers@.service /etc/systemd/system/rqworkers@.service
+
+WORKDIR /data/web/project
+CMD /data/web/project/start_scheduler.sh
