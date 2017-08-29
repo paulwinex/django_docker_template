@@ -71,6 +71,7 @@ sudo pip install docker-compose
 cd ~
 git clone https://github.com/paulwinex/django_docker_template.git
 cd ~/django_docker_example
+
 # create images
 ./_build_all.sh
 
@@ -86,15 +87,14 @@ docker-compose up -d
 
 
 ### Полное пересоздание образов
-#### (Нужно находиться в папке с файлом docker-compose.yml)
-
 ```
+# (Нужно находиться в папке с файлом docker-compose.yml)
 docker-compose build --no-cache
 ```
 
 ### Остановка стека
-###### (Нужно находиться в папке с файлом docker-compose.yml)
 ```
+# (Нужно находиться в папке с файлом docker-compose.yml)
 docker-compose down
 ```
 
@@ -143,5 +143,6 @@ docker rmi $(docker images -q);
 
 ### Как задать количество воркеров?
 ```
+# (Нужно находиться в папке с файлом docker-compose.yml)
 docker-compose scale worker=3
 ```
