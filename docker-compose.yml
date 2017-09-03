@@ -72,7 +72,8 @@ services:
     image: paulwinex/scheduler
     links:
       - redis:redis
-    env_file: .env
+    env_file:
+      - .env
     volumes:
       - ./project:/data/web/project
       - ${LOG_DIR}:/data/logs
