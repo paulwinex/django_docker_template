@@ -121,12 +121,12 @@ docker-compose restart
 ```
 docker stop $(docker ps -aq);docker rm $(docker ps -aq)
 ```
-### или
+#### или
 ```
 docker-compose rm --all -f
 ```
 
-### Удаление всех неактивных контейнеров:
+### Удаление всех неактивных контейнеров
 ```
 docker stop $(docker ps -a | grep 'Exited' | awk '{print $1}') && docker rm $(docker ps -a | grep 'Exited' | awk '{print $1}')
 ```
@@ -139,6 +139,11 @@ docker volume rm $(docker volume ls -q);
 ### Удаление всех образов (занятые не удляются) 
 ```
 docker rmi $(docker images -q);
+```
+
+### Удаление образов с именем <none>
+```
+docker rmi $(docker images -f "dangling=true" -q)
 ```
 
 ### Как задать количество воркеров?
