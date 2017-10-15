@@ -141,7 +141,7 @@ docker volume rm $(docker volume ls -q);
 docker rmi $(docker images -q);
 ```
 
-### Удаление образов с именем <none>
+### Удаление образов с именем \<none\>
 ```
 docker rmi $(docker images -f "dangling=true" -q)
 ```
