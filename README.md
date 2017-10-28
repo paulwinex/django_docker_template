@@ -151,3 +151,12 @@ docker rmi $(docker images -f "dangling=true" -q)
 # (Нужно находиться в папке с файлом docker-compose.yml)
 docker-compose scale worker=3
 ```
+
+### Запустить образ на паузе
+```
+docker run -d --name=paused IMAGE_NAME /bin/sh -c "while true; do sleep 5; date; done"
+```
+затем зайти на него
+```
+docker exec -it paused bash
+```
