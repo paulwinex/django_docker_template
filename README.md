@@ -106,7 +106,9 @@ docker rm $(docker ps -a -q -f status=exited)
 ### Удаление всех контейнеров
 ```
 docker rm -f $(docker ps -a -q)
-or
+```
+или
+```
 docker stop $(docker ps -aq);docker rm $(docker ps -aq)
 ```
 
@@ -119,7 +121,7 @@ docker stop $(docker ps -aq);docker start $(docker ps -aq)
 docker-compose restart
 ```
 
-### Статистика апущенных контейнеров с именами вместо id
+### Статистика запущенных контейнеров с именами вместо id
 ```
 docker stats $(docker ps --format={{.Names}})
 ```
