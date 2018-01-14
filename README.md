@@ -123,12 +123,12 @@ docker-compose restart
 ```
 docker stats $(docker ps --format={{.Names}})
 ```
-### или
+#### или
 ```
 docker-compose rm --all -f
 ```
 
-### Удаление всех неактивных контейнеров:
+### Удаление всех неактивных контейнеров
 ```
 docker stop $(docker ps -a | grep 'Exited' | awk '{print $1}') && docker rm $(docker ps -a | grep 'Exited' | awk '{print $1}')
 ```
@@ -143,8 +143,22 @@ docker volume rm $(docker volume ls -q);
 docker rmi $(docker images -q);
 ```
 
+### Удаление образов с именем \<none\>
+```
+docker rmi $(docker images -f "dangling=true" -q)
+```
+
 ### Как задать количество воркеров?
 ```
 # (Нужно находиться в папке с файлом docker-compose.yml)
 docker-compose scale worker=3
+```
+
+### Запустить образ на паузе
+```
+docker run -d --name=paused IMAGE_NAME /bin/sh -c "while true; do sleep 5; date; done"
+```
+затем зайти на него
+```
+docker exec -it paused bash
 ```

@@ -67,14 +67,15 @@ services:
     depends_on:
       - redis
 
-  scheduler:
-    restart: always
-    image: paulwinex/scheduler
-    links:
-      - redis:redis
-    env_file: .env
-    volumes:
-      - ./project:/data/web/project
-      - ${LOG_DIR}:/data/logs
-    depends_on:
-      - redis
+  # scheduler:
+  #   restart: always
+  #   image: paulwinex/scheduler
+  #   links:
+  #     - redis:redis
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - ./project:/data/web/project
+  #     - ${LOG_DIR}:/data/logs
+  #   depends_on:
+  #     - redis

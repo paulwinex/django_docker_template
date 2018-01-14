@@ -72,17 +72,17 @@ class SchedulerTest(View):
 
     @classmethod
     def create_job(cls):
-        r = Redis()
+        r = Redis(host=settings.REDIS_HOST, port=6379)
         scheduler = Scheduler(connection=r)
         job = scheduler.enqueue_in(timedelta(seconds=30), scheduler_test)
         r.set(cls.redis_job_name + str(len(list(r.scan_iter(cls.redis_job_name+'*')))), str(job.id))
 
     @classmethod
     def get_result(cls):
-        r = Redis()
+        r = Redis(host=settings.REDIS_HOST, port=6379)
         results = []
         for id in r.scan_iter(cls.redis_job_name + '*'):
-            job = Job(r.get(id).decode("utf-8"), Redis())
+            job = Job(r.get(id).decode("utf-8"), Redis(host=settings.REDIS_HOST, port=6379))
             results.append([id.decode("utf-8"), job.result or 'Waiting...'])
             if job.result:
                 r.delete(id)

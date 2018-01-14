@@ -150,6 +150,7 @@ if not os.path.exists(MEDIA_ROOT):
 
 QUEUES = ['high', 'default', 'low']
 
+
 REDIS_HOST = 'redis' if os.getenv('IS_DOCKER_CONTAINER') else 'localhost'
 
 RQ_QUEUES = {
