@@ -164,3 +164,9 @@ docker run -d --name=paused IMAGE_NAME /bin/sh -c "while true; do sleep 5; date;
 ```
 docker exec -it paused bash
 ```
+
+### Запустить контейнер в режиме CMD (bash) с открытым портом
+
+```
+docker run -it -p 8000:8000 --entrypoint bash <IMAGE_NAME>
+```
